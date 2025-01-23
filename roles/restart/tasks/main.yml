@@ -1,0 +1,13 @@
+---
+- name: 'reboot all instances'
+  ansible.builtin.reboot:
+
+- name: 'wait for all nodes to become available'
+  ansible.builtin.wait_for:
+    port: 45100
+    host: "{{ item }}"
+    search_regex: OpenSSH
+    delay: 10
+  with_items:
+    - "{{ hostvars['localhost']['lst_ips'] }}"
+  connection: local

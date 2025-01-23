@@ -1,0 +1,28 @@
+---
+- name: 'create manifests directory'
+  ansible.builtin.file:
+    path: '/etc/kubernetes/manifests'
+    state: directory
+    mode: '0775'  
+
+- name: 'join nodes'
+  ansible.builtin.shell: 
+    cmd: "{{ joinnode }}"
+  register: nodejoin
+
+- ansible.builtin.debug:
+    var: nodejoin.stdout
+
+- name: 'nodes firewall security'
+  ansible.builtin.lineinfile:
+    path: '/etc/iptables/rules.v4'
+    insertafter: '-A INPUT -i lo -j ACCEPT'
+    line: "{{ item }}"
+  with_items:
+    - '-A INPUT -p tcp --dport 10250:10259 -m comment --comment "node traffic" -j ACCEPT'
+    - '-A INPUT -p tcp --dport 30000:32767 -m comment --comment "nodeport traffic" -j ACCEPT'
+
+- name: 'iptables restart'
+  ansible.builtin.service:
+    name: 'iptables'
+    state: restarted

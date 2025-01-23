@@ -1,0 +1,7 @@
+---
+- name: 'set sudoers'
+  community.general.sudoers:
+    name: 'cog'
+    user: 'cog'
+    commands: ALL
+    nopassword: true

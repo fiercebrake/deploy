@@ -1,0 +1,3 @@
+---
+ips: "{{ hostvars['localhost']['lst_ips'] }}" 
+servers: "{{ hostvars['localhost']['lst_servers'] }}"

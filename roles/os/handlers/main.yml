@@ -1,0 +1,10 @@
+---
+- name: 'iptables restart'
+  ansible.builtin.service:
+    name: iptables.service
+    state: restarted
+
+- name: 'containerd restart'
+  ansible.builtin.service:
+    name: containerd.service
+    state: restarted

@@ -1,0 +1,70 @@
+---
+- name: 'get instances'
+  hosts: localhost
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  roles:
+   - aws
+
+- name: 'All instances configuration'
+  hosts: all
+  port: '45100'
+  become: 'True'
+  become_user: 'root'
+  gather_facts: True
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  roles:
+    - packages
+    - users
+    - sudoers
+    - ssh
+    - os
+    - iptables
+    - crio
+    - k8s
+
+- name: 'cluster bootstrap'
+  hosts: 'master'
+  port: '45100'
+  become: 'True'
+  become_user: 'root'
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  roles:
+    - master
+
+- name: 'join nodes to cluster'
+  hosts: 'nodes'
+  port: '45100'
+  become: 'True'
+  become_user: 'root'
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  roles:
+    - nodes
+
+- name: 'restart all nodes'
+  hosts: all 
+  port: '45100'
+  become: 'True'
+  become_user: 'root'
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  roles:
+   - restart
+
+# - name: 'app deployment'
+#   hosts: "{{ hostvars['localhost']['lst_ips'][0] }}"
+#   port: '45100'
+#   become: 'True'
+#   become_user: 'root'
+#   gather_facts: False
+#   vars:
+#     ansible_python_interpreter: "{{ ansible_playbook_python }}"
+#   roles:
+#     - app

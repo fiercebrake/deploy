@@ -1,0 +1,43 @@
+---
+- name: 'install packages'
+  ansible.builtin.apt:
+    pkg:
+    - sudo
+    - curl
+    - wget
+    - screen
+    - bash-completion
+    - vim
+    - net-tools
+    - unzip
+    - p7zip
+    - bzip2
+    - oddjob
+    - rsync
+    - iptables
+    - iptables-persistent
+    - fail2ban
+    - gpg
+    - python3
+    - python3-pip
+    - parted
+    - virtualenv
+    - ca-certificates
+    - ntfs-3g
+    - cifs-utils
+    - psmisc
+    - sshpass
+    - samba
+    - exfatprogs
+    - f2fs-tools
+    ### kvm
+    - qemu-guest-agent
+    - virt-manager
+    - dnsmasq
+    - bridge-utils
+    - libvirt0
+    - qemu-system
+    - netcat-openbsd
+    update_cache: yes
+    lock_timeout: 360
+

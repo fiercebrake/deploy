@@ -1,0 +1,36 @@
+---
+# - name: 'Collect instance IP'
+#   amazon.aws.ec2_instance_info:
+#     region: 'us-east-1'
+#     filters:
+#       instance-state-name: ["running"]
+#   register: servers
+
+- name: 'create list variable'
+  ansible.builtin.set_fact:
+    lst_ips: []
+
+- name: 'saving ips in a list'
+  ansible.builtin.set_fact:
+    # lst_ips: "{{ lst_ips + [servers.instances[item].private_ip_address] }}"
+  # loop: "{{ range(0, servers.instances|length) }}"
+    lst_ips:
+      - '192.168.122.228'
+      - '192.168.122.73'
+      - '192.168.122.83'
+      - '192.168.122.132'
+
+- name: 'store servers sufix'
+  ansible.builtin.set_fact:
+    lst_servers: "{{ name_sf }}"
+    k8s_version: '1.32.0'
+    ctd_version: '1.7.11'
+    rnc_version: '1.1.11'
+    cni_version: '1.2.0'
+    cri_version: '1.32.0'
+    cidr: '200.77.7.0/16'
+    dokuser: "{{ dokuser }}"
+    dokpass: "{{ dokpass }}"
+
+- name: 'Refresh inventory'
+  meta: refresh_inventory

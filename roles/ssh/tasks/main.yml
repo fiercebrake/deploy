@@ -1,0 +1,22 @@
+---
+- name: 'tweak ssh'
+  ansible.builtin.replace:
+    path: '/etc/ssh/sshd_config'
+    regexp: "{{ item.reg }}"
+    replace: "{{ item.rep }}"
+  loop:
+    - {reg: '^#Port 22$', rep: 'Port 45100'}
+    - {reg: '^#ListenAddress 0.0.0.0$', rep: 'ListenAddress 0.0.0.0'}
+    - {reg: '^#LoginGraceTime 2m$', rep: 'LoginGraceTime 2m'}
+    - {reg: '^#PermitRootLogin prohibit-password$', rep: 'PermitRootLogin no'}
+    - {reg: '^#StrictModes yes$', rep: 'StrictModes yes'}
+    - {reg: '^#MaxAuthTries 6$', rep: 'MaxAuthTries 6'}
+    - {reg: '^#MaxSessions 10$', rep: 'MaxSessions 10'}
+    - {reg: '^#PubkeyAuthentication yes$', rep: 'PubkeyAuthentication yes'}
+
+- name: 'restart ssh'
+  ansible.builtin.service:
+    name: 'sshd'
+    state: restarted
+    enabled: yes
+

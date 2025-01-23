@@ -1,0 +1,55 @@
+---
+- name: 'cluster bootstrap'
+  ansible.builtin.shell: 
+    cmd: "kubeadm init --pod-network-cidr {{ hostvars['localhost']['cidr'] }} --apiserver-advertise-address {{ hostvars['localhost']['lst_ips'][0] }} --kubernetes-version {{ hostvars['localhost']['k8s_version'] }} --node-name {{ hostvars['localhost']['lst_servers'][0] }}"
+    # cmd: "kubeadm init --pod-network-cidr 192.168.122.0/24 --apiserver-advertise-address 192.168.122.133 --kubernetes-version 1.32.0 --node-name k8s-master-0"
+
+- name: 'configure root account as cluster admin'
+  ansible.builtin.file:
+    path: '/root/.kube'
+    state: directory
+
+- name: 'copy user config file'
+  ansible.builtin.copy:
+    remote_src: 'yes'
+    src: '/etc/kubernetes/admin.conf'
+    dest: '/root/.kube/config'
+    owner: 'root'
+    group: 'root'
+    
+# - name: 'install calico cni'
+#   ansible.builtin.shell:
+#     cmd: "{{ item}}"
+#   with_items:
+#     - 'kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/tigera-operator.yaml'
+#     - 'kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/custom-resources.yaml'
+
+- name: 'install calico cni'
+  ansible.builtin.shell:
+    cmd: "{{ item}}"
+  with_items:
+    - 'kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/calico.yaml'
+
+- name: 'master firewall security'
+  ansible.builtin.lineinfile:
+    path: '/etc/iptables/rules.v4'
+    insertafter: '-A INPUT -i lo -j ACCEPT'
+    line: "{{ item }}"
+  with_items:
+    - '-A INPUT -p tcp --dport 6443 -m comment --comment "master node traffic" -j ACCEPT'
+    - '-A INPUT -p tcp --dport 2379:2380 -m comment --comment "master node traffic" -j ACCEPT'
+    - '-A INPUT -p tcp --dport 10250:10259 -m comment --comment "master node traffic" -j ACCEPT'
+
+- name: 'iptables restart'
+  ansible.builtin.service:
+    name: 'iptables'
+    state: restarted
+
+- name: 'print-join-command'
+  ansible.builtin.shell: 
+    cmd: '/usr/bin/kubeadm token create --print-join-command'
+  register: 'joincommand'
+
+- name: 'store variables'
+  set_fact:
+    joinmaster: "{{ joincommand.stdout }}"

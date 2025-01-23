@@ -1,0 +1,131 @@
+---
+# - name: 'copy repositories over'
+#   ansible.builtin.copy:
+#     src: "{{ item.src }}"
+#     dest: "{{ item.dest }}"
+#   with_items:
+#     - {src: './roles/os/files/cri-o.repo', dest: '/etc/yum.repos.d/cri-o.repo'}
+#     - {src: './roles/os/files/kubernetes.repo', dest: '/etc/yum.repos.d/kubernetes.repo'}
+
+- name: 'Set hostname master'
+  ansible.builtin.hostname:
+    name: 'k8s-master-0'
+  when: ansible_default_ipv4.address == "{{ hostvars['localhost']['lst_ips'][0] }}"
+
+- name: 'Set hostname node0'
+  ansible.builtin.hostname:
+    name: 'k8s-node-0'
+  when: ansible_default_ipv4.address == "{{ hostvars['localhost']['lst_ips'][1] }}"
+
+- name: 'Set hostname node1'
+  ansible.builtin.hostname:
+    name: 'k8s-node-1'
+  when: ansible_default_ipv4.address == "{{ hostvars['localhost']['lst_ips'][2] }}"
+
+- name: 'Set hostname node2'
+  ansible.builtin.hostname:
+    name: 'k8s-node-2'
+  when: ansible_default_ipv4.address == "{{ hostvars['localhost']['lst_ips'][3] }}"
+
+- name: 'disable swap'
+  ansible.builtin.command:
+    cmd: "sudo {{ item }}"
+  args:
+    chdir: /usr/bin
+  loop:
+    - 'swapoff -a'
+
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+
+- name: 'Set K8s repos'
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    line: "{{ item.line }}"
+    state: present
+    create: true
+  loop:
+    - {path: '/etc/apt/sources.list.d/kubernetes.list', line: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /'}
+    - {path: '/etc/apt/sources.list.d/cri-o.list', line: 'deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.32/deb/ /'}
+
+- name: 'remove preexisting gpg files'
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - '/etc/apt/keyrings/kubernetes-apt-keyring.gpg'
+    - '/etc/apt/keyrings/cri-o-apt-keyring.gpg'
+
+- name: 'Add K8s repo signing key'
+  ansible.builtin.shell:
+    cmd: "curl -fsSL {{ item.url }} | sudo gpg --dearmor -o {{ item.dest }}"
+  args:
+    chdir: /usr/bin
+  loop:
+    - {url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/keyrings/kubernetes-apt-keyring.gpg'}
+    - {url: 'https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/keyrings/cri-o-apt-keyring.gpg'}
+
+- name: 'Update cache'
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: 'install dependency packages'
+  ansible.builtin.apt:
+    lock_timeout: 90
+    name: 
+      - 'socat'
+      # - 'iproute-tc'
+      # - 'conntrack-tools'
+    state: latest
+
+- name: 'k8s bash completion'
+  ansible.builtin.lineinfile:
+    path: '/root/.bashrc'
+    line: 'source /usr/share/bash-completion/bash_completion'
+    state: present
+
+- name: 'load overlay and br_netfilter mods'
+  ansible.builtin.command: "modprobe {{ item }}"
+  with_items:
+    - 'overlay'
+    - 'br_netfilter'
+
+- name: 'permanently enable overlay and br_netfilter'
+  ansible.builtin.lineinfile:
+    path: '/etc/modules-load.d/k8s.conf'
+    line: "{{ item }}"
+    create: yes
+    state: present
+  with_items:
+    - 'overlay'
+    - 'br_netfilter'
+
+- name: 'permanently enable ip_forward'
+  ansible.builtin.lineinfile:
+    path: '/etc/sysctl.conf'
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - 'net.ipv4.ip_forward = 1'
+    - 'net.bridge.bridge-nf-call-iptables = 1'
+    - 'net.bridge.bridge-nf-call-ip6tables = 1'
+
+- name: 'enable ip_fwd'
+  ansible.builtin.command: "sysctl -w {{ item }}"
+  with_items:
+    - 'net.ipv4.ip_forward=1'
+    - 'net.bridge.bridge-nf-call-iptables=1'
+    - 'net.bridge.bridge-nf-call-ip6tables=1'
+
+- name: 'Apply sysctl params without reboot'
+  ansible.builtin.command: 'sysctl --system'
+  
+- name: 'set hosts files'
+  ansible.builtin.lineinfile:
+    path: '/etc/hosts'
+    line: "{{ ips[item] }} {{ servers[item] }}"
+    state: present
+  with_items: "{{ range(0, servers | length) }}"

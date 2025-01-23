@@ -1,0 +1,6 @@
+---
+# - name: 'deploy app'
+#   ansible.builtin.command: 'kubectl apply -f /root/java-hw.yml'
+
+- ansible.builtin.debug:
+    msg: "Master node is {{ hostvars['localhost']['lst_ips'][0] }}"

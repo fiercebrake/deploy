@@ -1,0 +1,16 @@
+---
+- name: 'install k8s'
+  ansible.builtin.apt:
+    lock_timeout: 90
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - 'kubelet'
+    - 'kubeadm'
+    - 'kubectl'
+
+- name: 'start kubelet service'
+  ansible.builtin.service:
+    name: 'kubelet'
+    state: started
+    enabled: yes

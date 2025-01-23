@@ -1,0 +1,15 @@
+---
+- name: 'move rules file'
+  ansible.builtin.copy:
+    src: 'roles/iptables/files/rules.v4'
+    dest: '/etc/iptables/rules.v4'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+- name: 'restart iptables'
+  ansible.builtin.service:
+    name: 'iptables'
+    state: restarted
+    enabled: yes
+

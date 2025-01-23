@@ -1,0 +1,14 @@
+---
+custenvi: "{{ lookup('ansible.builtin.env', 'TF_VAR_customer_envi') }}"
+custname: "{{ lookup('ansible.builtin.env', 'TF_VAR_customer_name') }}"
+dokuser: "{{ lookup('ansible.builtin.env', 'TF_VAR_dok_user') }}"
+dokpass: "{{ lookup('ansible.builtin.env', 'TF_VAR_dok_pass') }}"
+name_sf:
+  # - 'ec2-tcc-dev-demos-0'
+  # - 'ec2-tcc-dev-demos-1'
+  # - 'ec2-tcc-dev-demos-2'
+  # - 'ec2-tcc-dev-demos-3'
+    - 'k8s-master-0'
+    - 'k8s-node-0'
+    - 'k8s-node-1'
+    - 'k8s-node-2'

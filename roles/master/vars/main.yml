@@ -1,0 +1,5 @@
+---
+cidr: "{{ hostvars['localhost']['cidr'] }}"
+address: "{{ hostvars['localhost']['lst_ips'][0] }}"
+k8s: "{{ hostvars['localhost']['k8s_version'] }}"
+node: "{{ hostvars['localhost']['lst_servers'][0] }}"

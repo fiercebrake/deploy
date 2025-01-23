@@ -1,0 +1,3 @@
+---
+joincommand: "{{ hostvars[hostvars['localhost']['lst_ips'][0]]['joinmaster']}}"
+joinnode: "{{ joincommand|replace('kubeadm', '/usr/bin/kubeadm') }}"

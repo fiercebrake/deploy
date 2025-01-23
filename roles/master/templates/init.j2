@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/bin/kubeadm init --pod-network-cidr {{ cidr }} --apiserver-advertise-address {{ address }} --kubernetes-version {{ k8s }} --node-name {{ node }} --ignore-preflight-errors=all
