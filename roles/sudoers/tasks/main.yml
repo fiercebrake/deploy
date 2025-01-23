@@ -5,3 +5,11 @@
     user: 'cog'
     commands: ALL
     nopassword: true
+
+- name: 'set sudoers'
+  community.general.sudoers:
+    name: 'fierce_brake'
+    user: 'fierce_brake'
+    commands: 'ALL'
+    nopassword: false
+

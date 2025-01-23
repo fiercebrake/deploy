@@ -7,7 +7,7 @@
     home: "{{ item.home }}"
   loop:
     - {name: 'cog', shell: '/usr/bin/bash', chome: 'yes', home: '/home/cog'}
-    - {name: 'dvaliente', shell: '/usr/bin/bash', chome: 'yes', home: '/home/dvaliente'}
+    - {name: 'fierce_brake', shell: '/usr/bin/bash', chome: 'yes', home: '/home/fierce_brake'}
     - {name: 'ums', shell: '/usr/bin/bash', chome: 'yes', home: '/home/ums'}
 
 - name: 'Set authorized keys'
@@ -20,7 +20,7 @@
 
 - name: 'Set authorized keys'
   ansible.posix.authorized_key:
-    user: 'dvaliente'
+    user: 'fierce_brake'
     state: present
     key: "{{ item }}"
   with_file:
@@ -36,6 +36,6 @@
   loop:
     - {src: './roles/users/files/cog', dest: '/home/cog/.ssh/id_rsa', owner: 'cog', group: 'cog', mode: '0400'}
     - {src: './roles/users/files/cog.pub', dest: '/home/cog/.ssh/id_rsa.pub', owner: 'cog', group: 'cog', mode: '0400'}
-    - {src: './roles/users/files/dvaliente', dest: '/home/dvaliente/.ssh/id_rsa.pub', owner: 'dvaliente', group: 'dvaliente', mode: '0400'}
-    - {src: './roles/users/files/dvaliente.pub', dest: '/home/dvaliente/.ssh/id_rsa.pub', owner: 'dvaliente', group: 'dvaliente', mode: '0400'}
+    - {src: './roles/users/files/dvaliente', dest: '/home/fierce_brake/.ssh/id_rsa.pub', owner: 'fierce_brake', group: 'fierce_brake', mode: '0400'}
+    - {src: './roles/users/files/dvaliente.pub', dest: '/home/fierce_brake/.ssh/id_rsa.pub', owner: 'fierce_brake', group: 'fierce_brake', mode: '0400'}
 

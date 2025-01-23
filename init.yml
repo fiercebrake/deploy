@@ -1,13 +1,13 @@
 ---
 - name: 'DEBIAN'
   hosts: 'localhost'
-  gather_facts: True  
+  gather_facts: True
   vars:
     ansible_python_interpreter: "{{ ansible_playbook_python }}"
   roles:
-    - packages
-    - docker
-    - users
-    - ssh
-    - iptables
+    # - packages
+    # - docker
+    # - users
+    # - ssh
+    # - iptables
     - sudoers
