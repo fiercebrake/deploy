@@ -1,0 +1,41 @@
+---
+- name: 'create users'
+  ansible.builtin.user:
+    name: "{{ item.name }}" 
+    shell: "{{ item.shell }}"
+    create_home: "{{ item.chome }}"
+    home: "{{ item.home }}"
+  loop:
+    - {name: 'cog', shell: '/usr/bin/bash', chome: 'yes', home: '/home/cog'}
+    - {name: 'dvaliente', shell: '/usr/bin/bash', chome: 'yes', home: '/home/dvaliente'}
+    - {name: 'ums', shell: '/usr/bin/bash', chome: 'yes', home: '/home/ums'}
+
+- name: 'Set authorized keys'
+  ansible.posix.authorized_key:
+    user: 'cog'
+    state: present
+    key: "{{ item }}"
+  with_file:
+    - './roles/users/files/cog.pub'
+
+- name: 'Set authorized keys'
+  ansible.posix.authorized_key:
+    user: 'dvaliente'
+    state: present
+    key: "{{ item }}"
+  with_file:
+    - './roles/users/files/dvaliente.pub'
+
+- name: 'Copy ssh keys'
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - {src: './roles/users/files/cog', dest: '/home/cog/.ssh/id_rsa', owner: 'cog', group: 'cog', mode: '0400'}
+    - {src: './roles/users/files/cog.pub', dest: '/home/cog/.ssh/id_rsa.pub', owner: 'cog', group: 'cog', mode: '0400'}
+    - {src: './roles/users/files/dvaliente', dest: '/home/dvaliente/.ssh/id_rsa.pub', owner: 'dvaliente', group: 'dvaliente', mode: '0400'}
+    - {src: './roles/users/files/dvaliente.pub', dest: '/home/dvaliente/.ssh/id_rsa.pub', owner: 'dvaliente', group: 'dvaliente', mode: '0400'}
+
