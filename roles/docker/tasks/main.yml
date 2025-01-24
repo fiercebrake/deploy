@@ -30,9 +30,12 @@
     - docker-buildx-plugin
     - docker-compose-plugin
 
-- name: 'enable and start docker'
-  ansible.builtin.service:
-    name: 'docker'
-    state: restarted
+- name: 'Servcies enabled and started'
+  ansible.builtin.systemd:
+    name: "{{ item }}"     
+    state: restarted   
     enabled: yes
-
+    daemon_reload: yes
+  loop:
+    - 'docker'
+    - 'containerd'
