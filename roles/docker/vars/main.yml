@@ -1,2 +1,8 @@
 ---
-# vars file for roles/docker
+packages:
+  - 'ca-certificates curl'
+  - 'docker-ce'
+  - 'docker-ce-cli'
+  - 'containerd.io'
+  - 'docker-buildx-plugin'
+  - 'docker-compose-plugin'
