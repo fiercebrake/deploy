@@ -29,3 +29,10 @@ packages:
   - 'samba'
   - 'exfatprogs'
   - 'f2fs-tools'
+  ### kvm
+  - 'virt-manager'
+  - 'dnsmasq'
+  - 'bridge-utils'
+  - 'libvirt0'
+  - 'qemu-system'
+  - 'netcat-openbsd'
