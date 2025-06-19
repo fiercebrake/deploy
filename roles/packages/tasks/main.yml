@@ -1,40 +1,5 @@
----
-- name: 'install packages'
+- name: 'Install packages for base server'
   ansible.builtin.apt:
-    pkg:
-    - sudo
-    - curl
-    - wget
-    - screen
-    - bash-completion
-    - vim
-    - net-tools
-    - unzip
-    - p7zip
-    - bzip2
-    - oddjob
-    - rsync
-    - iptables
-    - iptables-persistent
-    - fail2ban
-    - gpg
-    - python3
-    - python3-pip
-    - python3-venv
-    - parted
-    - virtualenv
-    - ca-certificates
-    - ntfs-3g
-    - cifs-utils
-    - psmisc
-    - samba
-    - exfatprogs
-    - f2fs-tools
-    ### kvm
-    - virt-manager
-    - dnsmasq
-    - bridge-utils
-    - libvirt0
-    - qemu-system
-    - netcat-openbsd
-
+    name: "{{ packages }}"
+    state: present
+    update_cache: true
