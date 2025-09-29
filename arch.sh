@@ -45,7 +45,7 @@ function post_conf() {
 }
 
 
-get_image
+# get_image
 
 run_image
 
