@@ -8,17 +8,16 @@ sed -i 's|podman # or docker|docker # or podman|g' ./archlinux-docker/Makefile
 sed -i 's|CMD\ \["/usr/bin/bash"\]||g' ./archlinux-docker/Dockerfile.template
 
 cat << EOF >> ./archlinux-docker/Dockerfile.template
-RUN pacman -Syu --noconfirm --needed ansible-core ansible-lint ansible python python-pip python-pipx python-passlib \
-                                     vim vim-vital vim-tagbar vim-tabular vim-syntastic vim-supertab vim-spell-es \
-                                     vim-spell-en vim-nerdtree vim-nerdcommenter vim-indent-object vim-gitgutter \
-                                     vim-devicons vim-ansible mlocate bash-completion pkgfile rsync git wget \
-                                     reflector less libsecret gzip tar zlib xz openssh openssl sudo bind inetutils \
-                                     whois nginx curl nginx screen ccid zenity wireplumber udisks2 p7zip udftools sed \
-                                     fontforge gst-plugins-good samba opencl-headers libxpresent lib32-giflib \
-                                     lib32-gnutls lib32-libxinerama lib32-libxcomposite lib32-libxmu lib32-v4l-utils \
-                                     lib32-libxslt lib32-libpulse lib32-gtk3 lib32-gst-plugins-good lib32-sdl2 \
-                                     lib32-libcups lib32-ocl-icd lib32-jack mingw-w64-gcc
-
+RUN pacman -Syu --noconfirm --needed ansible-core ansible-lint ansible python python-pip python-pipx python-passlib vim vim-vital \
+                                     vim-tagbar vim-tabular vim-syntastic vim-supertab vim-spell-es vim-spell-en vim-nerdtree \
+                                     vim-nerdcommenter vim-indent-object vim-gitgutter vim-devicons vim-ansible mlocate \
+                                     bash-completion pkgfile rsync git wget reflector less libsecret gzip tar zlib xz openssh \
+                                     openssl screen sudo bind inetutils whois p7zip sed fuse nginx curl ccid zenity wireplumber \
+                                     udisks2 udftools fontforge gst-plugins-good samba opencl-headers libxpresent lib32-giflib \
+                                     lib32-gnutls lib32-libxinerama lib32-libxcomposite lib32-libxmu lib32-v4l-utils lib32-libxslt \
+                                     lib32-libpulse lib32-gtk3 lib32-gst-plugins-good lib32-sdl2 lib32-libcups lib32-ocl-icd \
+                                     lib32-jack mingw-w64-gcc
+                                     
 ENTRYPOINT ["/usr/bin/nginx", "-g", "daemon off;"]        
 EOF
 
