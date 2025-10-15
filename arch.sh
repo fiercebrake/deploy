@@ -1,5 +1,15 @@
 #!/bin/bash
 
+
+declare -a arr_comms=("sed -i 's|#en_US\.UTF-8 UTF-8|en_US\.UTF-8 UTF-8|g' /etc/locale.gen" "ln -sf /usr/share/zoneinfo/America/El_Salvador /etc/localtime" \
+                      "/usr/bin/locale-gen" "mv /usr/bin/vi /usr/bin/vi-bak" "ln -s /usr/bin/vim /usr/bin/vi"  \
+                      "echo -e 'repo  ALL=(ALL:ALL) ALL\nrepo ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/repo" \
+                      "useradd --system -s /usr/bin/nologin repo && usermod -aG wheel repo" \
+                      "mkdir /home/repo && chown repo:repo /home/repo" \
+                      "sed -i 's|/usr/share/nginx/html|/mnt/tkg/repo|g' /etc/nginx/nginx.conf" \
+                      "git clone https://github.com/fiercebrake/tkg.git /mnt/tkg" "chown -R repo:repo /mnt/tkg/" "docker restart arch")
+
+
 function get_image() {
 git clone https://gitlab.archlinux.org/archlinux/archlinux-docker.git
 
@@ -36,16 +46,10 @@ function run_image() {
 
 
 function post_conf() {
-    sudo docker exec arch mv /usr/bin/vi /usr/bin/vi-bak
-    sudo docker exec arch ln -s /usr/bin/vim /usr/bin/vi
-    sudo docker exec arch bash -c "echo -e 'repo  ALL=(ALL:ALL) ALL\nrepo ALL=(ALL) NOPASSWD: ALL
-    ' > /etc/sudoers.d/repo" 
-    sudo docker exec arch bash -c "useradd --system -s /usr/bin/nologin repo && usermod -aG wheel repo"
-    sudo docker exec arch bash -c "mkdir /home/repo && chown repo:repo /home/repo"
-    sudo docker exec arch sed -i 's|/usr/share/nginx/html|/mnt/tkg/repo|g' /etc/nginx/nginx.conf
-    sudo docker exec arch bash -c "git clone https://github.com/fiercebrake/tkg.git /mnt/tkg"
-    sudo docker exec arch bash -c "chown -R repo:repo /mnt/tkg/"
-    sudo docker restart arch
+    for command in "${arr_comms[@]}";
+    do
+      sudo docker exec arch $command
+    done
 }
 
 
