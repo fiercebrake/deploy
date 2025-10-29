@@ -1,16 +1,15 @@
 #!/bin/bash
 
 
-declare -a arr_packages=('onedrive-abraunegg' 'google-chrome' 'microsoft-edge-stable-bin' 'blesh-git' 'ocs-url' 'aic94xx-firmware' \
-                         'ast-firmware' 'wd719x-firmware' 'upd72020x-fw' 'laptop-mode-tools-git' 'schedtoold' 'zoom' 'ventoy-bin' \
-                         'visual-studio-code-bin' 'proton-ge-custom-bin' 'teams-for-linux-bin' 'sound-theme-smooth' \
-                         'bitwarden-bin' 'pikaur' 'yubico-authenticator-bin' 'bibata-cursor-theme-bin' \
-                         'flat-remix' 'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat' \
+declare -a arr_packages=('onedrive-abraunegg' 'google-chrome' 'microsoft-edge-stable-bin' 'blesh-git' 'ocs-url' 'aic94xx-firmware' 'ast-firmware' \
+	                 'wd719x-firmware' 'upd72020x-fw' 'laptop-mode-tools-git' 'schedtoold' 'zoom' 'ventoy-bin' 'visual-studio-code-bin' \
+			 'proton-ge-custom-bin' 'teams-for-linux-bin' 'sound-theme-smooth' 'bitwarden-bin' 'pikaur' 'yubico-authenticator-bin' \
+			 'bibata-cursor-theme-bin' 'flat-remix' 'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat' \
 			 'heroic-games-launcher' 'crossover' 'deezer' 'brave-bin' 'microsoft-edge-dev-bin' 'linux-tkg' 'nvidia-all' 'wine-tkg-git')
 
 declare -a arr_config=('ntl' 'nvd' 'wne')
 
-repo_dir='/home/repo'
+repo_dir='/home/repo/bash'
 
 
 
@@ -19,7 +18,7 @@ if ! ping -c 1 -W 2 'aur.archlinux.org' > /dev/null 2>&1; then
   exit 1
 fi
 
-/usr/bin/sudo -u repo /usr/bin/mkdir $repo_dir
+/usr/bin/sudo -u repo /usr/bin/mkdir $repo_dir/repo/
 
 function del_folder() {
   /usr/bin/sudo /usr/bin/rm -rf $repo_dir/$1
@@ -41,14 +40,14 @@ function get_package() {
 
   case $1 in
     linux-tkg)
-      /usr/bin/cp /mnt/tkg/customization-$1.cfg $repo_dir/$1/customization.cfg
+      /usr/bin/cp $repo_dir/customization-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     nvidia-all)
-      /usr/bin/cp /mnt/tkg/customization-$1.cfg $repo_dir/$1/customization.cfg
+      /usr/bin/cp $repo_dir/customization-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     wine-tkg-git)
       folder=$1/$1
-      /usr/bin/cp /mnt/tkg/customization-$1.cfg $repo_dir/$1/$1/customization.cfg
+      /usr/bin/cp $repo_dir/customization-$1.cfg $repo_dir/$1/$1/customization.cfg
       ;;
   esac
   
