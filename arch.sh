@@ -35,7 +35,7 @@ RUN /bin/sh -c "useradd --system -s /usr/bin/nologin repo && usermod -aG wheel r
 
 RUN /bin/sh -c "mkdir /home/repo && chown repo:repo /home/repo"
 
-RUN /bin/sh -c "sed -i 's|/usr/share/nginx/html|/mnt/tkg/repo|g' /etc/nginx/nginx.conf"
+RUN /bin/sh -c "sed -i 's|/home/repo/repo|g' /etc/nginx/nginx.conf"
 
 ENTRYPOINT ["/usr/bin/nginx", "-g", "daemon off;"]        
 EOF
