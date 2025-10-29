@@ -10,16 +10,19 @@ declare -a arr_packages=('onedrive-abraunegg' 'google-chrome' 'microsoft-edge-st
 
 declare -a arr_config=('ntl' 'nvd' 'wne')
 
+repo_dir='/home/repo'
+
+
 
 if ! ping -c 1 -W 2 'aur.archlinux.org' > /dev/null 2>&1; then
   /usr/bin/echo "### THE DOMAIN IS DOWN OR UNREACHABLE ###"
   exit 1
 fi
 
-/usr/bin/sudo -u repo /usr/bin/mkdir /mnt/tkg/repo
+/usr/bin/sudo -u repo /usr/bin/mkdir $repo_dir
 
 function del_folder() {
-  /usr/bin/sudo /usr/bin/rm -rf /mnt/tkg/$1
+  /usr/bin/sudo /usr/bin/rm -rf $repo_dir/$1
 }
 
 
@@ -29,7 +32,7 @@ function get_folder() {
   else
     domain='aur.archlinux.org'
   fi
-  /usr/bin/sudo -u repo /usr/bin/git clone https://$domain/$1.git /mnt/tkg/$1
+  /usr/bin/sudo -u repo /usr/bin/git clone https://$domain/$1.git $repo_dir/$1
 }
 
 
@@ -38,34 +41,34 @@ function get_package() {
 
   case $1 in
     linux-tkg)
-      /usr/bin/cp /mnt/tkg/customization-$1.cfg /mnt/tkg/$1/customization.cfg
+      /usr/bin/cp /mnt/tkg/customization-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     nvidia-all)
-      /usr/bin/cp /mnt/tkg/customization-$1.cfg /mnt/tkg/$1/customization.cfg
+      /usr/bin/cp /mnt/tkg/customization-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     wine-tkg-git)
       folder=$1/$1
-      /usr/bin/cp /mnt/tkg/customization-$1.cfg /mnt/tkg/$1/$1/customization.cfg
+      /usr/bin/cp /mnt/tkg/customization-$1.cfg $repo_dir/$1/$1/customization.cfg
       ;;
   esac
   
-  /usr/bin/sudo -u repo /usr/bin/makepkg --needed --noconfirm --syncdeps --cleanbuild --clean --skippgpcheck --force --dir /mnt/tkg/$folder
+  /usr/bin/sudo -u repo /usr/bin/makepkg --needed --noconfirm --syncdeps --cleanbuild --clean --skippgpcheck --force --dir $repo_dir/$folder
   if [ $? -ne 0 ]; then
     echo "Error: Failed to create $1." > ./error.log
     # exit 1
   fi
 
   if [[ $1 == 'httpfs2-2gbplus' ]] || [[ $1 == 'libwireplumber-4.0-compat' ]] || [[ $1 == 'linux-tkg' ]]; then
-    /usr/bin/sudo /usr/bin/pacman --needed --noconfirm -U /mnt/tkg/$1/*.pkg.tar.zst
+    /usr/bin/sudo /usr/bin/pacman --needed --noconfirm -U $repo_dir/$1/*.pkg.tar.zst
   fi
 
-  /usr/bin/mv -f /mnt/tkg/$folder/*.pkg.tar.zst /mnt/tkg/repo
+  /usr/bin/mv -f $repo_dir/$folder/*.pkg.tar.zst $repo_dir/repo/
 }
 
 
 function post_repo() {
-  /usr/bin/rm -rf /mnt/tkg/repo/themis*
-  /usr/bin/repo-add -n -v /mnt/tkg/repo/themis.db.tar.gz /mnt/tkg/repo/*.pkg.tar.zst
+  /usr/bin/rm -rf $repo_dir/repo/themis*
+  /usr/bin/repo-add -n -v $repo_dir/repo/themis.db.tar.gz $repo_dir/repo/*.pkg.tar.zst
 }
 
 
