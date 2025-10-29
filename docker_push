@@ -1,0 +1,3 @@
+docker login
+docker tag 4358a204275a fiercebrake/arch:1.0.1
+docker push fiercebrake/arch:1.0.1
