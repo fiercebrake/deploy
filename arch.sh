@@ -1,8 +1,10 @@
 #!/bin/bash
 
 
-declare -a arr_comms=("git clone https://github.com/fiercebrake/tkg.git /mnt/tkg" \
-                      "chown -R repo:repo /mnt/tkg/")
+declare -a arr_comms=("git clone -b bash https://github.com/fiercebrake/deploy.git /home/repo/bash/" \
+                      "chown -R repo:repo /home/repo/" \
+                      "mv /usr/bin/vi /usr/bin/vi-bak" \
+                      "ln -sf /usr/bin/vim /usr/bin/vi")
 
 
 function get_image() {
@@ -35,7 +37,7 @@ RUN /bin/sh -c "useradd --system -s /usr/bin/nologin repo && usermod -aG wheel r
 
 RUN /bin/sh -c "mkdir /home/repo && chown repo:repo /home/repo"
 
-RUN /bin/sh -c "sed -i 's|/home/repo/repo|g' /etc/nginx/nginx.conf"
+RUN /bin/sh -c "sed -i 's|/usr/share/nginx/html|/home/repo/bash/repo|g' /etc/nginx/nginx.conf"
 
 ENTRYPOINT ["/usr/bin/nginx", "-g", "daemon off;"]        
 EOF
@@ -47,10 +49,10 @@ cd ../ && sudo rm -rf ./archlinux-docker/
 
 
 function run_image() {
-    sudo docker run -d --name arch \
+    sudo docker run -d --name arch --restart=unless-stopped \
                     --net dockers --ip 192.168.75.13 \
-                    -v /var/www/arch/data:/mnt \
-                    archlinux/archlinux:multilib-devel
+                    -v /var/www/arch/data:/home/repo/bash \
+                    fiercebrake/arch:1.0.1
 }
 
 
@@ -63,11 +65,8 @@ function post_conf() {
 }
 
 
-get_image
+# get_image
 
 run_image
 
 post_conf
-
-# sudo docker exec arch bash -c "chmod +x /mnt/tkg/linuxtkg.sh"
-# sudo docker exec arch bash -c "cd /mnt/tkg/ && sudo -u repo ./linuxtkg.sh"
