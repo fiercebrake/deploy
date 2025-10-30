@@ -40,14 +40,14 @@ function get_package() {
 
   case $1 in
     linux-tkg)
-      /usr/bin/cp $repo_dir/customization-$1.cfg $repo_dir/$1/customization.cfg
+      /usr/bin/cp $repo_dir/repo-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     nvidia-all)
-      /usr/bin/cp $repo_dir/customization-$1.cfg $repo_dir/$1/customization.cfg
+      /usr/bin/cp $repo_dir/repo-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     wine-tkg-git)
       folder=$1/$1
-      /usr/bin/cp $repo_dir/customization-$1.cfg $repo_dir/$1/$1/customization.cfg
+      /usr/bin/cp $repo_dir/repo-$1.cfg $repo_dir/$1/$1/customization.cfg
       ;;
   esac
   
@@ -60,12 +60,12 @@ function get_package() {
   if [[ $1 == 'httpfs2-2gbplus' ]] || [[ $1 == 'libwireplumber-4.0-compat' ]] || [[ $1 == 'linux-tkg' ]]; then
     /usr/bin/sudo /usr/bin/pacman --needed --noconfirm -U $repo_dir/$1/*.pkg.tar.zst
   fi
-
-  /usr/bin/mv -f $repo_dir/$folder/*.pkg.tar.zst $repo_dir/repo/
 }
 
 
 function post_repo() {
+  /usr/bin/mv -f $repo_dir/*/*.pkg.tar.zst $repo_dir/repo/
+  /usr/bin/mv -f $repo_dir/*/*/*.pkg.tar.zst $repo_dir/repo/
   /usr/bin/rm -rf $repo_dir/repo/themis*
   /usr/bin/repo-add -n -v $repo_dir/repo/themis.db.tar.gz $repo_dir/repo/*.pkg.tar.zst
 }
