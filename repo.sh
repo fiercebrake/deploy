@@ -5,7 +5,7 @@ declare -a arr_packages=('onedrive-abraunegg' 'google-chrome' 'microsoft-edge-st
 	                 'wd719x-firmware' 'upd72020x-fw' 'laptop-mode-tools-git' 'schedtoold' 'zoom' 'ventoy-bin' 'visual-studio-code-bin' \
 			 'proton-ge-custom-bin' 'teams-for-linux-bin' 'sound-theme-smooth' 'bitwarden-bin' 'pikaur' 'yubico-authenticator-bin' \
 			 'bibata-cursor-theme-bin' 'flat-remix' 'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat' \
-			 'heroic-games-launcher' 'crossover' 'deezer' 'brave-bin' 'microsoft-edge-dev-bin' 'linux-tkg' 'nvidia-all' 'wine-tkg-git')
+			 'heroic-games-launcher' 'crossover' 'deezer' 'brave-bin' 'wps-office' 'linux-tkg' 'nvidia-all' 'wine-tkg-git')
 
 declare -a arr_config=('ntl' 'nvd' 'wne')
 
@@ -17,6 +17,10 @@ if ! ping -c 1 -W 2 'aur.archlinux.org' > /dev/null 2>&1; then
   /usr/bin/echo "### THE DOMAIN IS DOWN OR UNREACHABLE ###"
   exit 1
 fi
+
+/usr/bin/reflector --country 'United States' --latest 100 --sort rate --protocol https,ftp --age 24 --save /etc/pacman.d/mirrorlist
+
+sudo pacman -Syu --noconfirm
 
 /usr/bin/sudo -u repo /usr/bin/mkdir $repo_dir/repo/
 
@@ -67,7 +71,7 @@ function post_repo() {
   /usr/bin/mv -f $repo_dir/*/*.pkg.tar.zst $repo_dir/repo/
   /usr/bin/mv -f $repo_dir/*/*/*.pkg.tar.zst $repo_dir/repo/
   /usr/bin/rm -rf $repo_dir/repo/themis*
-  /usr/bin/repo-add -n -v $repo_dir/repo/themis.db.tar.gz $repo_dir/repo/*.pkg.tar.zst
+  sudo -u repo /usr/bin/repo-add -n -v $repo_dir/repo/themis.db.tar.gz $repo_dir/repo/*.pkg.tar.zst
 }
 
 
