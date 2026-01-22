@@ -5,7 +5,7 @@ declare -a arr_packages=('onedrive-abraunegg' 'google-chrome' 'microsoft-edge-st
 	                 'wd719x-firmware' 'upd72020x-fw' 'laptop-mode-tools-git' 'schedtoold' 'zoom' 'ventoy-bin' 'visual-studio-code-bin' \
 			 'proton-ge-custom-bin' 'teams-for-linux-bin' 'sound-theme-smooth' 'bitwarden-bin' 'pikaur' 'yubico-authenticator-bin' \
 			 'bibata-cursor-theme-bin' 'flat-remix' 'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat' \
-			 'heroic-games-launcher' 'crossover' 'deezer' 'brave-bin' 'wps-office' 'linux-tkg' 'nvidia-all' 'wine-tkg-git')
+			 'heroic-games-launcher' 'crossover' 'deezer' 'brave-bin' 'wps-office' 'linux-tkg' 'linux-tkg-alk' 'nvidia-all' 'wine-tkg-git')
 
 declare -a arr_config=('ntl' 'nvd' 'wne')
 
@@ -36,6 +36,9 @@ function get_folder() {
     domain='aur.archlinux.org'
   fi
   /usr/bin/sudo -u repo /usr/bin/git clone https://$domain/$1.git $repo_dir/$1
+  if [[ $1 == 'linux-tkg-alk' ]]; then
+    /usr/bin/sudo -u repo /usr/bin/git clone https://$domain/$1.git $repo_dir/linux-tkg-alk
+  fi
 }
 
 
@@ -44,6 +47,9 @@ function get_package() {
 
   case $1 in
     linux-tkg)
+      /usr/bin/cp $repo_dir/repo-$1.cfg $repo_dir/$1/customization.cfg
+      ;;
+    linux-tkg-alk)
       /usr/bin/cp $repo_dir/repo-$1.cfg $repo_dir/$1/customization.cfg
       ;;
     nvidia-all)
