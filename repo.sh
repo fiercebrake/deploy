@@ -5,7 +5,9 @@ declare -a arr_packages=('onedrive-abraunegg' 'google-chrome' 'microsoft-edge-st
 	                 'wd719x-firmware' 'upd72020x-fw' 'laptop-mode-tools-git' 'schedtoold' 'zoom' 'ventoy-bin' 'visual-studio-code-bin' \
 			 'proton-ge-custom-bin' 'teams-for-linux-bin' 'sound-theme-smooth' 'bitwarden-bin' 'pikaur' 'yubico-authenticator-bin' \
 			 'bibata-cursor-theme-bin' 'flat-remix' 'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat' \
-			 'heroic-games-launcher' 'crossover' 'deezer' 'brave-bin' 'wps-office' 'linux-tkg' 'linux-tkg-alk' 'nvidia-all' 'wine-tkg-git')
+			 'heroic-games-launcher' 'crossover' 'deezer'  'wps-office' 'omnissa-horizon-client' 'omnissa-horizon-file-association' \
+			 'omnissa-horizon-html5mmr' 'omnissa-horizon-integrated-printing' 'omnissa-horizon-scanner-client' 'omnissa-horizon-serialport-client' \
+			 'omnissa-horizon-usb' 'linux-tkg' 'linux-tkg-alk' 'nvidia-all' 'wine-tkg-git')
 
 declare -a arr_config=('ntl' 'nvd' 'wne')
 
