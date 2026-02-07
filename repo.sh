@@ -18,10 +18,7 @@ declare -a PACKAGES=(
     'pikaur' 'yubico-authenticator-bin' 'bibata-cursor-theme-bin' 'flat-remix'
     'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat'
     'heroic-games-launcher' 'crossover' 'deezer' 'wps-office'
-    'omnissa-horizon-client' 'omnissa-horizon-file-association' 'omnissa-horizon-html5mmr'
-    'omnissa-horizon-integrated-printing' 'omnissa-horizon-scanner-client'
-    'omnissa-horizon-serialport-client' 'omnissa-horizon-usb'
-    'linux-tkg' 'linux-tkg-alk' 'nvidia-all' 'wine-tkg-git'
+    'omnissa-horizon-client' 'linux-tkg' 'linux-tkg-alk' 'nvidia-all' 'wine-tkg-git'
 )
 
 # Packages that need to be installed after building (build dependencies)
