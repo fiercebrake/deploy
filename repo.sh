@@ -17,7 +17,7 @@ declare -a PACKAGES=(
     'proton-ge-custom-bin' 'teams-for-linux-bin' 'sound-theme-smooth' 'bitwarden-bin'
     'pikaur' 'yubico-authenticator-bin' 'bibata-cursor-theme-bin' 'flat-remix'
     'kora-icon-theme' 'httpfs2-2gbplus' 'ttf-ms-win10-auto' 'libwireplumber-4.0-compat'
-    'heroic-games-launcher' 'crossover' 'deezer' 'wps-office' 'libtiff5' 
+    'heroic-games-launcher' 'crossover' 'deezer' 'wps-office' 'libtiff5' 'cursor-bin'
     'omnissa-horizon-client' 'linux-tkg' 'linux-tkg-alk' 'nvidia-all' 'wine-tkg-git'
 )
 
